@@ -1,0 +1,32 @@
+// RV32I Instruction Test Code for Min-gyo's CPU
+// Format: Hexadecimal Machine Code
+
+// 1. I-type (Initialize)
+00a00093 // addi x1, x0, 10   -> x1 = 10
+00500113 // addi x2, x0, 5    -> x2 = 5
+
+// 2. R-type (Arithmetic)
+002081b3 // add x3, x1, x2    -> x3 = 10 + 5 = 15
+40208233 // sub x4, x1, x2    -> x4 = 10 - 5 = 5
+
+// 3. S-type & I-type (Memory Store/Load)
+00302023 // sw x3, 0(x0)      -> Mem[0] = 15 (Store x3 to address 0)
+00002283 // lw x5, 0(x0)      -> x5 = 15 (Load from address 0)
+
+// 4. B-type (Branch) - Test if x2 == x4 (5 == 5)
+00410463 // beq x2, x4, 8     -> if (x2==x4) PC += 8 (Jump to 'Target')
+06300313 // addi x6, x0, 99   -> (Skipped) x6 should NOT be 99
+00100313 // Target: addi x6, x0, 1 -> x6 = 1 (Branch taken successfully)
+
+// 5. U-type (Upper Immediate)
+000013b7 // lui x7, 0x1       -> x7 = 0x1000 (Shift 1 left by 12)
+
+// 6. J-type (Jump)
+0080046f // jal x8, 8         -> x8 = PC+4, PC += 8 (Jump to 'Finish')
+06300493 // addi x9, x0, 99   -> (Skipped) x9 should NOT be 99
+
+// 7. U-type (AUIPC)
+00000517 // Finish: auipc x10, 0 -> x10 = Current PC
+
+// End (Loop forever)
+0000006f // jal x0, 0         -> Infinite Loop
